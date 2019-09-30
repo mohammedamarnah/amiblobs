@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4644338722736142354}
   - component: {fileID: 7672870551388332601}
   m_Layer: 0
-  m_Name: Hexagon
+  m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71,12 +71,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9643f131b53e545ce8120e7ced371e9d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3d5879b94e3b347e9b7d38fdb29a2726, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.34, y: 1.74}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
