@@ -8,18 +8,14 @@ public class GameController : MonoBehaviour {
   [SerializeField]
   public GameObject linePrefab;
   
-  [NonSerialized]
   public static GameObject currentLine;
+  private List<GameObject> allLines = new List<GameObject>();
 
-  [NonSerialized]
-  public List<Vector2> fingerPositions = new List<Vector2>();
-
-  [NonSerialized]
-  public LineRenderer lineRenderer;
-  [NonSerialized]
-  public EdgeCollider2D edgeCollider;
-  [NonSerialized]
-  public Polygon polygon;
+  private List<Vector2> fingerPositions = new List<Vector2>();
+  private Vector2 startingPoint;
+  private LineRenderer lineRenderer;
+  private EdgeCollider2D edgeCollider;
+  private Polygon polygon;
 
   void Update() {
     if(Input.GetMouseButtonDown(0)) {
@@ -47,26 +43,55 @@ public class GameController : MonoBehaviour {
     fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
     lineRenderer.SetPosition(0, fingerPositions[0]);
     lineRenderer.SetPosition(1, fingerPositions[1]);
+    startingPoint = fingerPositions[0];
     edgeCollider.points = fingerPositions.ToArray();
+    polygon.Points = Point.VecToPoint(edgeCollider.points);
     AmebaMovement.line = edgeCollider;
-    StartCoroutine(DestroyAfter(1f));
+    allLines.Add(currentLine);
+    StartCoroutine(DestroyAfter(2.5f));
   }
 
   void UpdateLine(Vector2 fingerPos) {
     if (currentLine != null) {
+      CheckForClosed(fingerPos);
       fingerPositions.Add(fingerPos);
       lineRenderer.positionCount++;
       lineRenderer.SetPosition(lineRenderer.positionCount - 1, fingerPos);
       edgeCollider.points = fingerPositions.ToArray();
+      polygon.Points = Point.VecToPoint(edgeCollider.points);
       AmebaMovement.line = edgeCollider;
+      // if (Math.Abs(startingPoint.x - fingerPos.x) < 1f
+      // && Math.Abs(startingPoint.y - fingerPos.y) < 1f) {
+    }
+  }
+
+  void CheckForClosed(Vector2 fingerPos) {
+    foreach (var p in fingerPositions) {
+      if (Math.Abs(p.x - fingerPos.x) < 0.5f && Math.Abs(p.y - fingerPos.y) < 0.5f) {
+        fingerPositions.Add(fingerPos);
+        polygon.Points = Point.VecToPoint(fingerPositions);
+        polygon.CheckIfClosed();
+        fingerPositions.RemoveAt(fingerPositions.Count - 1);
+        Debug.Log("is closed? " + polygon.isClosed);
+        break;
+      }
     }
   }
 
   IEnumerator DestroyAfter(float seconds) {
     yield return new WaitForSeconds(seconds);
+    // foreach (var line in allLines) {
+    //   if (line != null) {
+    //     Polygon p = line.GetComponent<Polygon>();
+    //     if (!p.isClosed) {
+    //       Destroy(p);
+    //     }
+    //   }
+    // }
     if (currentLine != null && !polygon.isClosed) {
       Destroy(currentLine);
-      currentLine = null;
     }
+    currentLine = null;
+    // allLines.Clear();
   }
 }
