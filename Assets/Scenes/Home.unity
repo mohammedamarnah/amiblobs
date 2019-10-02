@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -5934,6 +5934,7 @@ GameObject:
   - component: {fileID: 958660183}
   - component: {fileID: 958660182}
   - component: {fileID: 958660181}
+  - component: {fileID: 958660185}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -6021,6 +6022,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &958660185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958660180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8632a1fc9754445a8a36ce59f6858c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playNow: {fileID: 575469655}
+  about: {fileID: 1795703295}
+  settings: {fileID: 1246496923}
+  levels:
+  - {fileID: 1956077462}
+  - {fileID: 553928995}
+  - {fileID: 1026422929}
+  - {fileID: 1163162383}
 --- !u!1 &1026422929
 GameObject:
   m_ObjectHideFlags: 0

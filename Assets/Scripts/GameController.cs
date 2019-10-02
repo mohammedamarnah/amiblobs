@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
   [SerializeField]
   public GameObject linePrefab;
 
+  public static bool firstLock = false;
   public static Vector3 screenBoundaries;
   public static List<Square> squares = new List<Square>();
 
@@ -19,8 +20,8 @@ public class GameController : MonoBehaviour {
     screenBoundaries = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     float width = screenBoundaries.x;
     float height = screenBoundaries.y;
-    Vector2 topLeft = new Vector2(-width, height);
-    Vector2 topRight = new Vector2(width, height);
+    Vector2 topLeft = new Vector2(-width, height - 0.68f);
+    Vector2 topRight = new Vector2(width, height - 0.68f);
     Vector2 bottomLeft = new Vector2(-width, -height);
     Vector2 bottomRight = new Vector2(width, -height);
     Square sq = new Square(topLeft, topRight, bottomLeft, bottomRight);
@@ -28,6 +29,8 @@ public class GameController : MonoBehaviour {
   }
 
   void Update() {
+    Debug.Log(LineDrawer.drawingLock);
+    if (LineDrawer.drawingLock) return;
     if (squares.Count < 1) return;
     if(Input.GetMouseButtonDown(0)) {
       initialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -36,7 +39,7 @@ public class GameController : MonoBehaviour {
       lastPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
     if (Input.GetMouseButtonUp(0)) {
-      if (Vector2.Distance(initialPos, lastPos) > 0.1f) {
+      if (Vector2.Distance(initialPos, lastPos) > 0.5f) {
         Vector2 dir = new Vector2(lastPos.x - initialPos.x, lastPos.y - initialPos.y);
         bool horizontal = Math.Abs(dir.x) > 0f && Math.Abs(dir.y) <= 0.1f;
         bool vertical = Math.Abs(dir.y) > 0f && Math.Abs(dir.x) <= 0.1f;
@@ -46,13 +49,13 @@ public class GameController : MonoBehaviour {
             if (horizontal) {
               float right = squares[i].bottomLeft.x;
               float left = squares[i].bottomRight.x;
-              Draw(new Vector3(right, initialPos.y, 0));
-              Draw(new Vector3(left, initialPos.y, 0));
+              Draw(new Vector3(right, initialPos.y, 0), -1);
+              Draw(new Vector3(left, initialPos.y, 0), -1);
             } else if (vertical) {
               float top = squares[i].topLeft.y;
               float bottom = squares[i].bottomLeft.y;
-              Draw(new Vector3(initialPos.x, top, 0));
-              Draw(new Vector3(initialPos.x, bottom, 0));
+              Draw(new Vector3(initialPos.x, top, 0), 1);
+              Draw(new Vector3(initialPos.x, bottom, 0), 1);
             }
             pos = i;
             break;
@@ -75,14 +78,15 @@ public class GameController : MonoBehaviour {
           squares.RemoveAt(pos);
           squares.Add(a);
           squares.Add(b);
+          firstLock = true;
         }
       }
     }
   }
 
-  void Draw(Vector3 destination) {
+  void Draw(Vector3 destination, int dir) {
     currentLine = Instantiate(linePrefab, initialPos, Quaternion.identity);
     lineDrawer = currentLine.GetComponent<LineDrawer>();
-    lineDrawer.Draw(initialPos, destination);
+    lineDrawer.Draw(initialPos, destination, dir);
   }
 }
