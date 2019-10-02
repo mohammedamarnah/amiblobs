@@ -206,6 +206,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Circle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3284898154365978832, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6824438376856449010, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -506,6 +511,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Circle (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3284898154365978832, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6824438376856449010, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -611,6 +621,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Circle
       objectReference: {fileID: 0}
+    - target: {fileID: 3284898154365978832, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6824438376856449010, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -715,6 +730,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Circle (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284898154365978832, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6824438376856449010, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
         type: 3}
@@ -887,6 +907,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Circle (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3284898154365978832, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6824438376856449010, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -991,6 +1016,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Circle (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284898154365978832, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6824438376856449010, guid: 7c3fa734ff9af4ed889bb1ea0d4223f7,
         type: 3}

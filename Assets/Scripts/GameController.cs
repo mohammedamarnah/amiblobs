@@ -7,91 +7,82 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
   [SerializeField]
   public GameObject linePrefab;
-  
-  public static GameObject currentLine;
-  private List<GameObject> allLines = new List<GameObject>();
 
-  private List<Vector2> fingerPositions = new List<Vector2>();
-  private Vector2 startingPoint;
-  private LineRenderer lineRenderer;
-  private EdgeCollider2D edgeCollider;
-  private Polygon polygon;
+  public static Vector3 screenBoundaries;
+  public static List<Square> squares = new List<Square>();
+
+  GameObject currentLine;
+  LineDrawer lineDrawer;
+  Vector2 initialPos, lastPos;
+
+  void Start() {
+    screenBoundaries = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+    float width = screenBoundaries.x;
+    float height = screenBoundaries.y;
+    Vector2 topLeft = new Vector2(-width, height);
+    Vector2 topRight = new Vector2(width, height);
+    Vector2 bottomLeft = new Vector2(-width, -height);
+    Vector2 bottomRight = new Vector2(width, -height);
+    Square sq = new Square(topLeft, topRight, bottomLeft, bottomRight);
+    squares.Add(sq);
+  }
 
   void Update() {
+    if (squares.Count < 1) return;
     if(Input.GetMouseButtonDown(0)) {
-      AmebaMovement.speed = 0.3f;
-      CreateLine();
+      initialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
-    if(Input.GetMouseButton(0) && currentLine != null) {
-      Vector2 tempFingerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-      if(Vector2.Distance(tempFingerPos, fingerPositions.Last()) > 0.1f) {
-        UpdateLine(tempFingerPos);
-      }
+    if(Input.GetMouseButton(0)) {
+      lastPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
     if (Input.GetMouseButtonUp(0)) {
-      AmebaMovement.speed = 0.1f;
-    }
-  }
-
-  void CreateLine() {
-    currentLine = Instantiate(linePrefab, Vector3.zero, Quaternion.identity);
-    lineRenderer = currentLine.GetComponent<LineRenderer>();
-    edgeCollider = currentLine.GetComponent<EdgeCollider2D>();
-    polygon = currentLine.GetComponent<Polygon>();
-    fingerPositions.Clear();
-    fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-    fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-    lineRenderer.SetPosition(0, fingerPositions[0]);
-    lineRenderer.SetPosition(1, fingerPositions[1]);
-    startingPoint = fingerPositions[0];
-    edgeCollider.points = fingerPositions.ToArray();
-    polygon.Points = Point.VecToPoint(edgeCollider.points);
-    AmebaMovement.line = edgeCollider;
-    allLines.Add(currentLine);
-    StartCoroutine(DestroyAfter(2.5f));
-  }
-
-  void UpdateLine(Vector2 fingerPos) {
-    if (currentLine != null) {
-      CheckForClosed(fingerPos);
-      fingerPositions.Add(fingerPos);
-      lineRenderer.positionCount++;
-      lineRenderer.SetPosition(lineRenderer.positionCount - 1, fingerPos);
-      edgeCollider.points = fingerPositions.ToArray();
-      polygon.Points = Point.VecToPoint(edgeCollider.points);
-      AmebaMovement.line = edgeCollider;
-      // if (Math.Abs(startingPoint.x - fingerPos.x) < 1f
-      // && Math.Abs(startingPoint.y - fingerPos.y) < 1f) {
-    }
-  }
-
-  void CheckForClosed(Vector2 fingerPos) {
-    foreach (var p in fingerPositions) {
-      if (Math.Abs(p.x - fingerPos.x) < 0.5f && Math.Abs(p.y - fingerPos.y) < 0.5f) {
-        fingerPositions.Add(fingerPos);
-        polygon.Points = Point.VecToPoint(fingerPositions);
-        polygon.CheckIfClosed();
-        fingerPositions.RemoveAt(fingerPositions.Count - 1);
-        Debug.Log("is closed? " + polygon.isClosed);
-        break;
+      if (Vector2.Distance(initialPos, lastPos) > 0.1f) {
+        Vector2 dir = new Vector2(lastPos.x - initialPos.x, lastPos.y - initialPos.y);
+        bool horizontal = Math.Abs(dir.x) > 0f && Math.Abs(dir.y) <= 0.1f;
+        bool vertical = Math.Abs(dir.y) > 0f && Math.Abs(dir.x) <= 0.1f;
+        int pos = 0;
+        for(int i = 0; i < squares.Count; i++) {
+          if (squares[i].Contains(initialPos)) {
+            if (horizontal) {
+              float right = squares[i].bottomLeft.x;
+              float left = squares[i].bottomRight.x;
+              Draw(new Vector3(right, initialPos.y, 0));
+              Draw(new Vector3(left, initialPos.y, 0));
+            } else if (vertical) {
+              float top = squares[i].topLeft.y;
+              float bottom = squares[i].bottomLeft.y;
+              Draw(new Vector3(initialPos.x, top, 0));
+              Draw(new Vector3(initialPos.x, bottom, 0));
+            }
+            pos = i;
+            break;
+          }
+        }
+        Square a = new Square();
+        Square b = new Square();
+        if (horizontal) {
+          Vector2 newLeft = new Vector2(squares[pos].bottomLeft.x, initialPos.y);
+          Vector2 newRight = new Vector2(squares[pos].bottomRight.x, initialPos.y);
+          a = new Square(squares[pos].topLeft, squares[pos].topRight, newLeft, newRight);
+          b = new Square(newLeft, newRight, squares[pos].bottomLeft, squares[pos].bottomRight);
+        } else if (vertical) {
+          Vector2 newTop = new Vector2(initialPos.x, squares[pos].topLeft.y);
+          Vector2 newBottom = new Vector2(initialPos.x, squares[pos].bottomLeft.y);
+          a = new Square(newTop, squares[pos].topRight, newBottom, squares[pos].bottomRight);
+          b = new Square(squares[pos].topLeft, newTop, squares[pos].bottomLeft, newBottom);
+        }
+        if (horizontal || vertical) {
+          squares.RemoveAt(pos);
+          squares.Add(a);
+          squares.Add(b);
+        }
       }
     }
   }
 
-  IEnumerator DestroyAfter(float seconds) {
-    yield return new WaitForSeconds(seconds);
-    // foreach (var line in allLines) {
-    //   if (line != null) {
-    //     Polygon p = line.GetComponent<Polygon>();
-    //     if (!p.isClosed) {
-    //       Destroy(p);
-    //     }
-    //   }
-    // }
-    if (currentLine != null && !polygon.isClosed) {
-      Destroy(currentLine);
-    }
-    currentLine = null;
-    // allLines.Clear();
+  void Draw(Vector3 destination) {
+    currentLine = Instantiate(linePrefab, initialPos, Quaternion.identity);
+    lineDrawer = currentLine.GetComponent<LineDrawer>();
+    lineDrawer.Draw(initialPos, destination);
   }
 }

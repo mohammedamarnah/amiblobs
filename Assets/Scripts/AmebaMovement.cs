@@ -6,11 +6,6 @@ public class AmebaMovement : MonoBehaviour {
   bool stop = false;  
 
   void Update() {
-    // Construct a Point() from the position of the current ameba
-    // if SpeedController.polygon != null && !isClosed
-    // and Geometry.PointInConvexPolygon(colliderPolygon, currentPosition)
-    // then stop = true and we can destroy the ameba
-    // and increase the score
     if (!stop) {
       float newX = UnityEngine.Random.Range(-2.5f, 2.5f);
       float newY = UnityEngine.Random.Range(-4.5f, 4.5f);
