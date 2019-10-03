@@ -8,15 +8,16 @@ public class GameController : MonoBehaviour {
   [SerializeField]
   public GameObject linePrefab;
 
-  public static bool firstLock = false;
+  public static bool firstLock = false, youLost = false;
   public static Vector3 screenBoundaries;
   public static List<Square> squares = new List<Square>();
+  int lastID = 0;
 
   GameObject currentLine;
   LineDrawer lineDrawer;
   Vector2 initialPos, lastPos;
 
-  void Start() {
+  void OnEnable() {
     screenBoundaries = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     float width = screenBoundaries.x;
     float height = screenBoundaries.y;
@@ -28,9 +29,16 @@ public class GameController : MonoBehaviour {
     squares.Add(sq);
   }
 
+  void OnDestroy() {
+    firstLock = youLost = false;
+    screenBoundaries = Vector3.zero;
+    squares.Clear();
+    lastID = 0;
+  }
+
   void Update() {
-    Debug.Log(LineDrawer.drawingLock);
-    if (LineDrawer.drawingLock) return;
+    if (youLost) return;
+    // if (LineDrawer.drawingLock) return;
     if (squares.Count < 1) return;
     if(Input.GetMouseButtonDown(0)) {
       initialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -49,13 +57,13 @@ public class GameController : MonoBehaviour {
             if (horizontal) {
               float right = squares[i].bottomLeft.x;
               float left = squares[i].bottomRight.x;
-              Draw(new Vector3(right, initialPos.y, 0), -1);
-              Draw(new Vector3(left, initialPos.y, 0), -1);
+              Draw(new Vector3(right, initialPos.y, 0), -1, -1);
+              Draw(new Vector3(left, initialPos.y, 0), -1, 1);
             } else if (vertical) {
               float top = squares[i].topLeft.y;
               float bottom = squares[i].bottomLeft.y;
-              Draw(new Vector3(initialPos.x, top, 0), 1);
-              Draw(new Vector3(initialPos.x, bottom, 0), 1);
+              Draw(new Vector3(initialPos.x, top, 0), 1, 1);
+              Draw(new Vector3(initialPos.x, bottom, 0), 1, -1);
             }
             pos = i;
             break;
@@ -84,9 +92,10 @@ public class GameController : MonoBehaviour {
     }
   }
 
-  void Draw(Vector3 destination, int dir) {
+  void Draw(Vector3 destination, int dir, int dir2) {
     currentLine = Instantiate(linePrefab, initialPos, Quaternion.identity);
     lineDrawer = currentLine.GetComponent<LineDrawer>();
-    lineDrawer.Draw(initialPos, destination, dir);
+    lineDrawer.id = lastID++;
+    lineDrawer.Draw(initialPos, destination, dir, dir2);
   }
 }

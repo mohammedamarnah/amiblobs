@@ -15,19 +15,22 @@ public class GameUI : MonoBehaviour {
   Text levelText;
 
   void Start() {
-    exit.onClick.AddListener(() => {
-      SceneManager.LoadScene("Home");
-    });
     mute.onClick.AddListener(() => {
+      this.GetComponent<AudioSource>().volume = 0;
       mute.gameObject.SetActive(false);
       unmute.gameObject.SetActive(true);
     });
     unmute.onClick.AddListener(() => {
+      this.GetComponent<AudioSource>().volume = 1;
       unmute.gameObject.SetActive(false);
       mute.gameObject.SetActive(true);
     });
     
     int level = PlayerPrefs.GetInt("level", 1);
-    levelText.text = $"LEVEL {level}";
+    levelText.text = $"LEVEL: {level}";
+  }
+
+  public void GoHome() {
+    SceneManager.LoadScene("Home");
   }
 }

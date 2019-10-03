@@ -7,10 +7,21 @@ public class Helpers {
     // double range = (double) max - (double) min;
     // double sample = rnd.NextDouble();
     // double scaled = (sample * range) + float.MinValue;
-    System.Random rand = new System.Random();
-    Random.InitState((int) System.DateTime.Now.Ticks + Random.Range(1, 10));
+    // System.Random rand = new System.Random();
+    // Random.InitState((int) System.DateTime.Now.Ticks + Random.Range(1, 10));
     // return min + ((int)rand.NextDouble() )
     return Random.Range(min, max);
+  }
+
+  public static int GenerateRandom(int min, int max) {
+      // System.Random rand = new System.Random();
+      // int val = rand.Next();
+      // int res = min + (val % (max - min + 1));
+      // while (res == 0) {
+      //   val = rand.Next();
+      //   res = min + (val % (max - min + 1));
+      // }
+      return Random.Range(min, max);
   }
 
   public static int GCD(int a, int b) {

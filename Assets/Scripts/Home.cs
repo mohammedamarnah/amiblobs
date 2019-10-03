@@ -16,6 +16,17 @@ public class Home : MonoBehaviour {
     playNow.onClick.AddListener(() => {
       SceneManager.LoadScene("InGame");
     });
+    settings.onClick.AddListener(() => {
+      SceneManager.LoadScene("Settings");
+    });
+    about.onClick.AddListener(() => {
+      SceneManager.LoadScene("About");
+    });
+    if (PlayerPrefs.GetInt("sounds", 1) == 0) {
+      GetComponent<AudioSource>().volume = 0;
+    } else {
+      GetComponentInParent<AudioSource>().volume = 1;
+    }
     int currentLevel = PlayerPrefs.GetInt("level", 1);
     int maxLevel = currentLevel;
     while (maxLevel % 4 != 0) maxLevel++;

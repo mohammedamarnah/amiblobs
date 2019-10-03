@@ -1299,6 +1299,7 @@ GameObject:
   - component: {fileID: 1246496925}
   - component: {fileID: 1246496924}
   - component: {fileID: 1246496923}
+  - component: {fileID: 1246496926}
   m_Layer: 5
   m_Name: HomeButton
   m_TagString: Untagged
@@ -1404,6 +1405,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1246496921}
   m_CullTransparentMesh: 0
+--- !u!114 &1246496926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246496921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e061c5e7d0814876a744a7dc5106945, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scene: Home
 --- !u!1 &1257034756
 GameObject:
   m_ObjectHideFlags: 0

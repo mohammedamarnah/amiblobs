@@ -14,7 +14,7 @@ public class AppInit : MonoBehaviour {
 
   void Update() {
     if (finished) return;
-    slider.value += 0.01f;
+    slider.value += 0.008f;
     if (slider.value >= 1) {
       SceneManager.LoadScene("Home");
       finished = true;
